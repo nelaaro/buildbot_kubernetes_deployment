@@ -1,0 +1,15 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - buildbot-master.cfg.yml
+  - buildbot-masters-config.yml
+  - buildbot-masters-svc.yml
+  - buildbot-masters.yml
+  - buildbot-secret.yml
+  - buildbot-workers.yml
+  - crossbar-svc.yml
+  - crossbar.yml
+  - pg-svc.yml
+  - pg-volumeclaim.yml
+  - pg.yml

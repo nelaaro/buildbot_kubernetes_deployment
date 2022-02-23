@@ -1,0 +1,32 @@
+---
+# https://hub.docker.com/r/buildbot/buildbot-worker/tags
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: example-worker
+  # namespace: buildbot
+spec:
+  serviceName: "example-worker"
+  replicas: 2
+  selector:
+    matchLabels:
+      k8s-app: example-worker
+  template:
+    metadata:
+      labels:
+        k8s-app: "example-worker"
+    spec:
+      containers:
+      - name: example-worker
+        image: buildbot/buildbot-worker:v3.4.0
+        imagePullPolicy: Always
+
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: nodetype
+                    operator: In
+                    values:
+                      - general

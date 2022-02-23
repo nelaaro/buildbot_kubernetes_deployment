@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pg-buildbot
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      k8s-app: pg-buildbot
+  template:
+    metadata:
+      labels:
+        k8s-app: pg-buildbot
+    spec:
+      containers:
+      - name: pg
+        env:
+        - name: POSTGRES_DB
+          value: buildbot
+        - name: POSTGRES_USER
+          value: buildbot
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: buildbot
+              key: pg_password
+        ports:
+        - containerPort: 5432
+          name: pg
+        volumeMounts:
+        - name: pg-buildbot
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: pg-buildbot
+        persistentVolumeClaim:
+          claimName: pg-buildbot
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: nodetype
+                    operator: In
+                    values:
+                      - general

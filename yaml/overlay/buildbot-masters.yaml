@@ -1,0 +1,33 @@
+---
+# https://hub.docker.com/r/buildbot/buildbot-master/tags
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: buildbot-master
+    name: buildbot-master
+  name: buildbot-master
+  # namespace: buildbot
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      k8s-app: buildbot-master
+  template:
+    metadata:
+      labels:
+        k8s-app: buildbot-master
+    spec:
+      containers:
+      - name: buildbot-master
+        image: buildbot/buildbot-master:v3.4.0
+        imagePullPolicy: Always
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: nodetype
+                    operator: In
+                    values:
+                      - general

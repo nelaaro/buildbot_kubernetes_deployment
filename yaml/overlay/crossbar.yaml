@@ -1,0 +1,27 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: crossbar
+    name: crossbar
+  name: crossbar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: crossbar
+  template:
+    metadata:
+      labels:
+        k8s-app: crossbar
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: nodetype
+                    operator: In
+                    values:
+                      - general

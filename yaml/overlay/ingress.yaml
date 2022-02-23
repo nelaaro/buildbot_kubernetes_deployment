@@ -1,0 +1,26 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kube-buildbot-ingress
+  annotations:
+    # nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-User,X-Auth-Request-Email
+    # nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.r-fld.afsouth1ctcld.net/oauth2/start
+    # nginx.ingress.kubernetes.io/auth-url: https://oauth2-proxy.r-fld.afsouth1ctcld.net/oauth2/auth
+    # nginx.ingress.kubernetes.io/auth-url: http://oauth2-proxy.security.svc.cluster.local/oauth2/auth
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - '*.r-ndf.afsouth1ctcld.net'
+  rules:
+    - host: "buildbot.r-ndf.afsouth1ctcld.net"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: buildbot-master
+                port:
+                  number: 8010
